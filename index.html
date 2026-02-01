@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Budget & Investment Calculator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <h1>Budget & Investment Planner</h1>
+        <p>Plan your monthly budget and see how your savings can grow over time.</p>
+        <div class="currency-control">
+          <label for="currency">Currency</label>
+          <select id="currency">
+            <option value="USD" selected>USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="CAD">CAD</option>
+            <option value="AUD">AUD</option>
+            <option value="JPY">JPY</option>
+            <option value="INR">INR</option>
+          </select>
+        </div>
+      </header>
+
+      <nav class="tabs">
+        <button class="tab-button active" data-tab="budget">Budget Calculator</button>
+        <button class="tab-button" data-tab="investment">Investment Calculator</button>
+      </nav>
+
+      <main class="tab-content">
+        <!-- Budget Tab -->
+        <section id="budget" class="tab-panel active">
+          <div class="card-grid">
+            <section class="card">
+              <h2>Monthly Budget</h2>
+              <div class="field-group">
+                <label for="income">Total Monthly Income</label>
+                <div class="input-prefix">
+                  <span class="currency-symbol">USD</span>
+                  <input type="number" id="income" min="0" step="0.01" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div class="field-group">
+                <div class="label-row">
+                  <label>Bills & Expenses</label>
+                  <button id="add-bill" type="button" class="secondary-btn small">+ Add Bill</button>
+                </div>
+                <div id="bills-list" class="bills-list"></div>
+              </div>
+
+              <div class="field-group">
+                <label for="target-savings">Target Savings (per month)</label>
+                <div class="input-prefix">
+                  <span class="currency-symbol">USD</span>
+                  <input type="number" id="target-savings" min="0" step="0.01" placeholder="Optional" />
+                </div>
+              </div>
+
+              <button id="calculate-budget" type="button" class="primary-btn full-width">
+                Calculate Budget
+              </button>
+            </section>
+
+            <section class="card results-card" aria-live="polite">
+              <h2>Budget Summary</h2>
+              <div class="summary-row">
+                <span>Total Income</span>
+                <span id="summary-income">USD 0.00</span>
+              </div>
+              <div class="summary-row">
+                <span>Total Bills</span>
+                <span id="summary-bills">USD 0.00</span>
+              </div>
+              <div class="summary-row">
+                <span>Target Savings</span>
+                <span id="summary-savings">USD 0.00</span>
+              </div>
+              <div class="summary-row highlight">
+                <span>Money Left After Bills</span>
+                <span id="summary-leftover">USD 0.00</span>
+              </div>
+              <div class="summary-row">
+                <span>Money Left After Bills & Target Savings</span>
+                <span id="summary-discretionary">USD 0.00</span>
+              </div>
+
+              <div class="bar-chart">
+                <div class="bar-label-row">
+                  <span>Income Allocation</span>
+                  <span id="allocation-percentages"></span>
+                </div>
+                <div class="bar-wrapper">
+                  <div class="bar-segment bills" id="bar-bills"></div>
+                  <div class="bar-segment savings" id="bar-savings"></div>
+                  <div class="bar-segment leftover" id="bar-leftover"></div>
+                </div>
+                <div class="bar-legend">
+                  <span class="legend-item">
+                    <span class="legend-swatch bills"></span>Bills
+                  </span>
+                  <span class="legend-item">
+                    <span class="legend-swatch savings"></span>Savings
+                  </span>
+                  <span class="legend-item">
+                    <span class="legend-swatch leftover"></span>Leftover
+                  </span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- Investment Tab -->
+        <section id="investment" class="tab-panel">
+          <div class="card-grid">
+            <section class="card">
+              <h2>Investment Inputs</h2>
+
+              <div class="field-group">
+                <label for="initial-amount">Initial Amount</label>
+                <div class="input-prefix">
+                  <span class="currency-symbol">USD</span>
+                  <input type="number" id="initial-amount" min="0" step="0.01" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="monthly-contribution">Monthly Contribution</label>
+                <div class="input-prefix">
+                  <span class="currency-symbol">USD</span>
+                  <input
+                    type="number"
+                    id="monthly-contribution"
+                    min="0"
+                    step="0.01"
+                    placeholder="e.g. your planned savings"
+                  />
+                </div>
+              </div>
+
+              <div class="field-group two-column">
+                <div>
+                  <label for="contribution-frequency">Contribution Frequency</label>
+                  <select id="contribution-frequency">
+                    <option value="month" selected>Each month</option>
+                    <option value="year">Each year</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Contribute at the</label>
+                  <div class="timing-toggle">
+                    <label class="timing-option">
+                      <input
+                        type="radio"
+                        name="contribution-timing"
+                        value="begin"
+                      />
+                      <span>Beginning</span>
+                    </label>
+                    <label class="timing-option">
+                      <input
+                        type="radio"
+                        name="contribution-timing"
+                        value="end"
+                        checked
+                      />
+                      <span>End</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field-group two-column">
+                <div>
+                  <label for="annual-rate">Annual Return Rate</label>
+                  <div class="input-suffix">
+                    <input
+                      type="number"
+                      id="annual-rate"
+                      min="0"
+                      step="0.1"
+                      placeholder="7"
+                    />
+                    <span>%</span>
+                  </div>
+                </div>
+                <div>
+                  <label for="years">Years to Invest</label>
+                  <input type="number" id="years" min="1" step="1" placeholder="10" />
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="compounding-frequency">Compounding Frequency</label>
+                <select id="compounding-frequency">
+                  <option value="1">Annually</option>
+                  <option value="12" selected>Monthly</option>
+                  <option value="4">Quarterly</option>
+                  <option value="52">Weekly</option>
+                  <option value="365">Daily</option>
+                </select>
+              </div>
+
+              <button id="calculate-investment" type="button" class="primary-btn full-width">
+                Calculate Growth
+              </button>
+            </section>
+
+            <section class="card results-card" aria-live="polite">
+              <h2>Investment Projection</h2>
+              <div class="summary-row">
+                <span>Total Contributions</span>
+                <span id="inv-contributions">USD 0.00</span>
+              </div>
+              <div class="summary-row">
+                <span>Estimated Final Balance</span>
+                <span id="inv-final-balance">USD 0.00</span>
+              </div>
+              <div class="summary-row highlight">
+                <span>Total Growth (Earnings)</span>
+                <span id="inv-growth">USD 0.00</span>
+              </div>
+
+              <p class="hint">
+                This is a simplified projection assuming a constant average return and regular contributions.
+                Real-world returns vary over time.
+              </p>
+
+              <div class="bar-chart small">
+                <div class="bar-label-row">
+                  <span>Contributions vs Growth</span>
+                </div>
+                <div class="bar-wrapper">
+                  <div class="bar-segment contributions" id="bar-contributions"></div>
+                  <div class="bar-segment growth" id="bar-growth"></div>
+                </div>
+                <div class="bar-legend">
+                  <span class="legend-item">
+                    <span class="legend-swatch contributions"></span>Contributions
+                  </span>
+                  <span class="legend-item">
+                    <span class="legend-swatch growth"></span>Growth
+                  </span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+  </html>
+
+
